@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="hypr">
+      <UniqueIdentifier>{95eeda24-ff94-4897-8f3c-4c9f51427719}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="headers">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="srcs">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="memory_allocator.cpp">
+      <Filter>srcs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\hypr\src\hyprocess\process_starter.cc">
+      <Filter>hypr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\hypr\src\hyprfile\runtime_dump_file.cc">
+      <Filter>hypr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\hypr\src\hyprfile\segments_file.cc">
+      <Filter>hypr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\hypr\src\hyprfile\hyprfile.cc">
+      <Filter>hypr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\hypr\src\hypr\components\runtime_dump.cc">
+      <Filter>hypr</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="minhseg.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="minhdmp.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

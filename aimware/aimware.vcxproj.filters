@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="srcs">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="headers">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="hypr">
+      <UniqueIdentifier>{0f02be27-f380-4632-b965-1b8f26b8fb1a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cc">
+      <Filter>srcs</Filter>
+    </ClCompile>
+    <ClCompile Include="aimware.cc">
+      <Filter>srcs</Filter>
+    </ClCompile>
+    <ClCompile Include="..\hypr\src\hyprfile\hyprfile.cc">
+      <Filter>hypr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\hypr\src\hyprfile\runtime_dump_file.cc">
+      <Filter>hypr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\hypr\src\hyprfile\segments_file.cc">
+      <Filter>hypr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\hypr\src\hypr\loader.cc">
+      <Filter>hypr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\hypr\src\hypr\components\runtime_dump.cc">
+      <Filter>hypr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\hypr\src\hypr\components\segment_mapper.cc">
+      <Filter>hypr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\hypr\src\hyprocess\process_starter.cc">
+      <Filter>hypr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\hypr\src\hyprtrace\api_tracer.cc">
+      <Filter>hypr</Filter>
+    </ClCompile>
+    <ClCompile Include="..\hypr\src\hyprtrace\execbp_tracer.cc">
+      <Filter>hypr</Filter>
+    </ClCompile>
+    <ClCompile Include="cpuid_spoof.cc">
+      <Filter>srcs</Filter>
+    </ClCompile>
+    <ClCompile Include="imports.cc">
+      <Filter>srcs</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="aimware.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
