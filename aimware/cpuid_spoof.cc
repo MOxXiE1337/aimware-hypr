@@ -2,7 +2,7 @@
 
 #include "aimware.h"
 
-#include <hyprtrace/execbp_tracer.h>
+#include <hyprtrace/exec_tracer.h>
 
 
 bool Aimware::SetupCpuidSpoof()
@@ -16,7 +16,7 @@ bool Aimware::SetupCpuidSpoof()
 
 	for (auto& address : cpuid_addresses)
 	{
-		if (!hyprtrace::ExecutionBreakPointTracer::AddExecutionBreakPoint(address, 2,
+		if (!hyprtrace::ExecutionTracer::AddExecutionBreakPoint(address, 2,
 			[](hyprutils::LogManager* logman, PCONTEXT context) 
 			{
 				cpuid_inputs[context->Rip] = context->Rax;
@@ -30,7 +30,7 @@ bool Aimware::SetupCpuidSpoof()
 					uintptr_t input = it->second;
 					auto print_cpuid_spoof = [&]()
 						{
-							logman->Log("spoofed cpuid {:X}, input {:X} -> output {:X} {:X} {:X} {:X}", address, input, context->Rax, context->Rbx, context->Rcx, context->Rdx);
+							//logman->Log("spoofed cpuid {:X}, input {:X} -> output {:X} {:X} {:X} {:X}", address, input, context->Rax, context->Rbx, context->Rcx, context->Rdx);
 						};
 
 					switch (input)

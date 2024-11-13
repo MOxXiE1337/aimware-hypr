@@ -1,13 +1,22 @@
 #include "aimware.h"
 
 #include <hyprtrace/api_tracer.h>
-#include <hyprtrace/execbp_tracer.h>
+#include <hyprtrace/exec_tracer.h>
 
 bool Aimware::PrevMap()
 {
 	hyprutils::LogManager& logman = GetLogManager();
 	hypr::RuntimeDump&     dump = GetRuntimeDump();
 	hypr::SegmentMapper&   mapper = GetSegmentMapper();
+
+
+	cfg_path_ = std::wstring(_wgetenv(L"APPDATA")) + L"\\aimware\\cfg\\";
+
+	if (!std::filesystem::exists(cfg_path_))
+	{
+		std::filesystem::create_directories(cfg_path_);
+		logman.Log("created config folder {}", std::string(cfg_path_.begin(), cfg_path_.end()));
+	}
 
 	// load runtime dump
 	if (!dump.LoadRuntimeDumpFileFromFile(appdata_path_ + "\\aimware\\aimware.hdmp"))
@@ -35,6 +44,7 @@ bool Aimware::PrevInvoke()
 	hyprutils::LogManager& logman = GetLogManager();
 
 	hyprtrace::ApiTracer::Intialize(this);
+	hyprtrace::ExecutionTracer::Initialize();
 		
 	hyprtrace::ApiTracer::AddFilteringModule("msvcrt.dll");
 
@@ -66,15 +76,36 @@ bool Aimware::PrevInvoke()
 	//}
 	logman.Log("imports have been set up");
 
+	logman.Log("setting up cpuid spoof...");
+	if (!SetupCpuidSpoof())
+	{
+		logman.Error("failed to set up cpuid spoof");
+		return false;
+	}
+	logman.Log("cpuid has been set up");
+
+	logman.Log("setting up hooks...");
+	if (!SetupHooks())
+	{
+		logman.Error("failed to set up hooks");
+		return false;
+	}
+	logman.Log("hooks have been set up");
+
 	return true;
 }
 
 bool Aimware::Invoke()
 {
 	hyprutils::LogManager& logman = GetLogManager();
+	hypr::SegmentMapper& mapper = GetSegmentMapper();
+	uintptr_t entry_point = mapper.TranslateAddress(0x11B75003DD);
 
-	logman.Log("calling entry point...");
-	HANDLE thread = CreateThread(nullptr, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(0x11B75003DD), nullptr, 0, nullptr);
+	logman.Log("calling entry point {:X}...", entry_point);
+
+	// u can just directly use the address 0x11B75003DD
+	// just because of standard
+	HANDLE thread = CreateThread(nullptr, 0, reinterpret_cast<LPTHREAD_START_ROUTINE>(entry_point), nullptr, 0, nullptr);
 
 	if (thread)
 		CloseHandle(thread);

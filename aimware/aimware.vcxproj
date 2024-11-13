@@ -118,6 +118,8 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <StackReserveSize>16000000</StackReserveSize>
+      <StackCommitSize>16000000</StackCommitSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -136,6 +138,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <StackReserveSize>16000000</StackReserveSize>
+      <StackCommitSize>16000000</StackCommitSize>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -144,14 +148,17 @@
     <ClCompile Include="..\hypr\src\hyprfile\segments_file.cc" />
     <ClCompile Include="..\hypr\src\hyprocess\process_starter.cc" />
     <ClCompile Include="..\hypr\src\hyprtrace\api_tracer.cc" />
-    <ClCompile Include="..\hypr\src\hyprtrace\execbp_tracer.cc" />
+    <ClCompile Include="..\hypr\src\hyprtrace\exec_tracer.cc" />
     <ClCompile Include="..\hypr\src\hypr\components\runtime_dump.cc" />
     <ClCompile Include="..\hypr\src\hypr\components\segment_mapper.cc" />
     <ClCompile Include="..\hypr\src\hypr\loader.cc" />
     <ClCompile Include="aimware.cc" />
     <ClCompile Include="cpuid_spoof.cc" />
     <ClCompile Include="dllmain.cc" />
+    <ClCompile Include="hooks.cc" />
+    <ClCompile Include="hooks\shell32.cc" />
     <ClCompile Include="imports.cc" />
+    <ClCompile Include="hooks\kernel32.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aimware.h" />
