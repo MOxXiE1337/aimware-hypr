@@ -8,10 +8,12 @@ class Aimware : public hypr::Loader, public hyprutils::Singleton<Aimware>
 private:
 	std::string appdata_path_;
 	std::wstring cfg_path_;
+
+	static LONG NTAPI ExceptionHandler(struct _EXCEPTION_POINTERS* exception);
 public:
 	Aimware() : Loader("Aimware"), appdata_path_(std::getenv("APPDATA"))
 	{
-
+	
 	}
 
 	std::wstring GetConfigPath() { return cfg_path_; }

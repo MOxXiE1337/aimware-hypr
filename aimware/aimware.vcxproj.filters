@@ -71,4 +71,9 @@
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <MASM Include="invoke.asm">
+      <Filter>srcs</Filter>
+    </MASM>
+  </ItemGroup>
 </Project>

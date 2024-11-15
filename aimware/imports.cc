@@ -43,13 +43,11 @@ bool Aimware::SetupImports()
 			if (proc->name.empty())
 				continue;
 
-			if (proc->name == "DeviceCapabilitiesExW") // idk why XD
-				continue;
-
+	
 			if (!proc->LoadProc())
 			{
-				logman.Error("failed to load proc {}!{}", module->name, proc->name);
-				return false;
+				logman.Warn("failed to load proc {}!{}", module->name, proc->name);
+				continue;
 			}
 
 			*reinterpret_cast<uint64_t*>(proc->address) = 0x00000000000025FF;
