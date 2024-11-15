@@ -15,6 +15,9 @@
     <Filter Include="srcs\hooks">
       <UniqueIdentifier>{6f24ab31-8a12-40dd-8819-3156ee1058ab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="srcs\zydis">
+      <UniqueIdentifier>{a7e40f3f-7493-4966-81fe-73d222a75915}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cc">
@@ -65,9 +68,15 @@
     <ClCompile Include="hooks\kernel32.cc">
       <Filter>srcs\hooks</Filter>
     </ClCompile>
+    <ClCompile Include="zydis\Zydis.c">
+      <Filter>srcs\zydis</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aimware.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="zydis\Zydis.h">
       <Filter>headers</Filter>
     </ClInclude>
   </ItemGroup>

@@ -18,9 +18,6 @@ int main(int argc, char* argv[])
 
 	hyprutils::LogManager& logman = ps.GetLogManager();
 
-#ifdef VM_VER
-#else
-#endif
 	HKEY key;
 	char install_path[MAX_PATH];
 	DWORD buffer_size = MAX_PATH;
@@ -87,7 +84,6 @@ int main(int argc, char* argv[])
 	{
 		logman.Log("process started {:X}", reinterpret_cast<uintptr_t>(process));
 	}
-	
 
 	return 0;
 }

@@ -62,8 +62,6 @@ bool Aimware::SetupCpuidSpoof()
 0x11B7E16E3C, // 49
 	};
 
-
-
 	static std::unordered_map<uintptr_t, uintptr_t> cpuid_inputs{};
 
 	for (auto& address : cpuid_addresses)
@@ -79,7 +77,6 @@ bool Aimware::SetupCpuidSpoof()
 					if (cpuid_inputs.find(context->Rip) == cpuid_inputs.end())
 						logman->Log("spoofed cpuid {:X} ({}/{})", context->Rip, cpuid_inputs.size() + 1, cpuid_addresses.size());
 				}
-
 
 				cpuid_inputs[context->Rip] = context->Rax;
 			},

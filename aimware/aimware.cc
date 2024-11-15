@@ -1,4 +1,8 @@
+#define USE_TRACER
+
 #include "aimware.h"
+
+#include "zydis/Zydis.h"
 
 #include <hyprtrace/api_tracer.h>
 #include <hyprtrace/exec_tracer.h>
@@ -42,7 +46,6 @@ bool Aimware::PrevMap()
 	// set mapper to static mode
 	mapper.SetMode(hypr::SegmentMapperMode::kStatic);
 	
-
 	return true;
 }
 
@@ -106,6 +109,13 @@ bool Aimware::PrevInvoke()
 
 extern "C" void AsmAimwareEntryPointInvoke();
 
+#ifdef USE_TRACER
+ZydisDecodedInstruction insn;
+ZydisDecodedOperand operands[ZYDIS_MAX_OPERAND_COUNT];
+ZydisDecoder decoder;
+ZydisFormatter formatter;
+#endif
+
 bool Aimware::Invoke()
 {
 	hyprutils::LogManager& logman = GetLogManager();
@@ -118,10 +128,20 @@ bool Aimware::Invoke()
 	// just because of standard
 #ifdef USE_TRACER
 	std::filesystem::remove("trace.txt");
+
+	ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_64, ZYDIS_STACK_WIDTH_64);
+
+	ZydisFormatterInit(&formatter, ZYDIS_FORMATTER_STYLE_INTEL);
+
 	hyprtrace::ExecutionTracer::StartTracingAt(reinterpret_cast<uintptr_t>(AsmAimwareEntryPointInvoke), [](hyprutils::LogManager* logman, PCONTEXT context) -> hyprtrace::ExecutionTracer::ExecutionTraceStatus
 		{
+			char buffer[256] = { 0 };
 			static std::ofstream file{ "trace.txt" };
-			std::println(file, "{:X}", context->Rip);
+
+			ZydisDecoderDecodeFull(&decoder, reinterpret_cast<void*>(context->Rip), 0x11B7F2B241 - context->Rip, &insn, operands);
+			ZydisFormatterFormatInstruction(&formatter, &insn, operands, insn.operand_count_visible, buffer, sizeof(buffer), context->Rip, ZYAN_NULL);
+
+			std::println(file, "{:X} {}", context->Rip, buffer);
 			std::println(file, "rax {:X} | rbx {:X} | rcx {:X} | rdx {:X} | rdi {:X} | rsi {:X} | r8 {:X} | r9 {:X} | r10 {:X} | r11 {:X} | r12 {:X} | r13 {:X} | r14 {:X}",
 				context->Rax,
 				context->Rbx,
