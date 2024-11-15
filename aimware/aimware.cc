@@ -1,4 +1,3 @@
-#define USE_TRACER
 
 #include "aimware.h"
 
@@ -129,9 +128,11 @@ bool Aimware::Invoke()
 #ifdef USE_TRACER
 	std::filesystem::remove("trace.txt");
 
+
 	ZydisDecoderInit(&decoder, ZYDIS_MACHINE_MODE_LONG_64, ZYDIS_STACK_WIDTH_64);
 
 	ZydisFormatterInit(&formatter, ZYDIS_FORMATTER_STYLE_INTEL);
+	ZydisFormatterSetProperty(&formatter, ZYDIS_FORMATTER_PROP_FORCE_SEGMENT, ZYAN_TRUE);
 
 	hyprtrace::ExecutionTracer::StartTracingAt(reinterpret_cast<uintptr_t>(AsmAimwareEntryPointInvoke), [](hyprutils::LogManager* logman, PCONTEXT context) -> hyprtrace::ExecutionTracer::ExecutionTraceStatus
 		{
