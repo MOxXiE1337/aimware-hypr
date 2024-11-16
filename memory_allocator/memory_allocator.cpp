@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
 	ps.ReserveMemoryFromSegmentsFile(segments);
 	
 	ps.SetImagePath(cs2_path);
-	ps.SetCommandLineParameters("-worldwide");
+	ps.SetCommandLineParameters("-worldwide -insecure");
 
 	HANDLE process = NULL;
 	size_t try_num = 0;

@@ -160,6 +160,7 @@
     <ClCompile Include="hooks\shell32.cc" />
     <ClCompile Include="imports.cc" />
     <ClCompile Include="hooks\kernel32.cc" />
+    <ClCompile Include="os_version_spoof.cc" />
     <ClCompile Include="zydis\Zydis.c" />
   </ItemGroup>
   <ItemGroup>

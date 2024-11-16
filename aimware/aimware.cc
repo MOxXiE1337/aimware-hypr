@@ -1,5 +1,7 @@
 
 #include "aimware.h"
+#include "data/aimware_hdmp.h"
+#include "data/aimware_hseg.h"
 
 #include "zydis/Zydis.h"
 
@@ -8,6 +10,11 @@
 
 LONG NTAPI Aimware::ExceptionHandler(struct _EXCEPTION_POINTERS* exception)
 {
+	uint32_t code = exception->ExceptionRecord->ExceptionCode;
+
+	if (code == DBG_PRINTEXCEPTION_C || code == DBG_PRINTEXCEPTION_WIDE_C)
+		return EXCEPTION_CONTINUE_SEARCH;
+
 	MessageBoxA(NULL, std::format("exception {:X} not handled at {:X}", exception->ExceptionRecord->ExceptionCode, reinterpret_cast<uintptr_t>(exception->ExceptionRecord->ExceptionAddress)).c_str(), "Aimware Error", MB_ICONERROR);
 	return EXCEPTION_CONTINUE_SEARCH;
 }
@@ -18,7 +25,7 @@ bool Aimware::PrevMap()
 	hypr::RuntimeDump&     dump = GetRuntimeDump();
 	hypr::SegmentMapper&   mapper = GetSegmentMapper();
 
-	AddVectoredExceptionHandler(0, ExceptionHandler);
+	//AddVectoredExceptionHandler(0, ExceptionHandler);
 
 	cfg_path_ = std::wstring(_wgetenv(L"APPDATA")) + L"\\aimware\\cfg\\";
 
@@ -55,29 +62,7 @@ bool Aimware::PrevInvoke()
 	hyprtrace::ApiTracer::Intialize(this);
 	hyprtrace::ExecutionTracer::Initialize();
 
-	hyprtrace::ApiTracer::DisableTraceLogging();
-
 	hyprtrace::ApiTracer::AddFilteringModule("msvcrt.dll");
-
-	hyprtrace::ApiTracer::AddFilteringApi("ntdll.dll!RtlEnterCriticalSection");
-	hyprtrace::ApiTracer::AddFilteringApi("ntdll.dll!RtlLeaveCriticalSection");
-	hyprtrace::ApiTracer::AddFilteringApi("ntdll.dll!NtQueryVirtualMemory");
-
-	hyprtrace::ApiTracer::AddFilteringApi("gdi32.dll!GetTextExtentPoint32W");
-	hyprtrace::ApiTracer::AddFilteringApi("gdi32.dll!ExtTextOutW");
-
-	hyprtrace::ApiTracer::AddFilteringApi("kernel32.dll!QueryPerformanceCounter");
-	hyprtrace::ApiTracer::AddFilteringApi("kernel32.dll!QueryPerformanceFrequency");
-
-	hyprtrace::ApiTracer::AddFilteringApi("user32.dll!GetClientRect");
-	hyprtrace::ApiTracer::AddFilteringApi("user32.dll!IsIconic");
-	hyprtrace::ApiTracer::AddFilteringApi("user32.dll!GetCursorPos");
-	hyprtrace::ApiTracer::AddFilteringApi("user32.dll!ScreenToClient");
-	hyprtrace::ApiTracer::AddFilteringApi("user32.dll!GetForegroundWindow");
-	hyprtrace::ApiTracer::AddFilteringApi("user32.dll!CallWindowProcW");
-
-	//ApiTracer] 7FF8AE09FAA0 -> 7FFB23A7FAA0 ntdll.dll!RtlEnterCriticalSection(return to 11B76D97B0)
-	//	[ApiTracer] 7FF8AE09F230 -> 7FFB23A7F230 ntdll.dll!RtlLeaveCriticalSection(return to 11B76072CC)
 
 	logman.Log("setting up imports...");
 	if (!SetupImports())
@@ -86,6 +71,14 @@ bool Aimware::PrevInvoke()
 		return false;
 	}
 	logman.Log("imports have been set up");
+
+	logman.Log("setting up os version spoof...");
+	if (!SetupOSVersionSpoof())
+	{
+		logman.Error("failed to set up os version spoof");
+		return false;
+	}
+	logman.Log("os version spoof has been set up");
 
 	logman.Log("setting up cpuid spoof...");
 	if (!SetupCpuidSpoof())
@@ -139,7 +132,7 @@ bool Aimware::Invoke()
 			char buffer[256] = { 0 };
 			static std::ofstream file{ "trace.txt" };
 
-			ZydisDecoderDecodeFull(&decoder, reinterpret_cast<void*>(context->Rip), 0x11B7F2B241 - context->Rip, &insn, operands);
+			ZydisDecoderDecodeFull(&decoder, reinterpret_cast<void*>(context->Rip), 0x11B770BA13 - context->Rip, &insn, operands);
 			ZydisFormatterFormatInstruction(&formatter, &insn, operands, insn.operand_count_visible, buffer, sizeof(buffer), context->Rip, ZYAN_NULL);
 
 			std::println(file, "{:X} {}", context->Rip, buffer);
@@ -158,7 +151,7 @@ bool Aimware::Invoke()
 				context->R13,
 				context->R14);
 
-			if (context->Rip == 0x11B7F2B241)
+			if (context->Rip == 0x11B770BA13)
 			{
 				MessageBoxA(NULL, "traced done, check the trace.txt", "TRACE", MB_ICONINFORMATION);
 				file.flush();

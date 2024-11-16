@@ -18,6 +18,9 @@
     <Filter Include="srcs\zydis">
       <UniqueIdentifier>{a7e40f3f-7493-4966-81fe-73d222a75915}</UniqueIdentifier>
     </Filter>
+    <Filter Include="data">
+      <UniqueIdentifier>{f379f7be-dcf9-4e22-bf83-133e1492a86d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cc">
@@ -70,6 +73,9 @@
     </ClCompile>
     <ClCompile Include="zydis\Zydis.c">
       <Filter>srcs\zydis</Filter>
+    </ClCompile>
+    <ClCompile Include="os_version_spoof.cc">
+      <Filter>srcs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
