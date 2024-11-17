@@ -2,13 +2,20 @@
 
 #include <hyprtrace/exec_tracer.h>
 
+std::unordered_map<uintptr_t, bool> g_os_version_number_addresses_spoofed;
+
+
 #define SPOOF_OS_VER(address, len, reg)\
 if(!hyprtrace::ExecutionTracer::AddExecutionBreakPoint(address, len, {}, [](hyprutils::LogManager* logman, PCONTEXT context)\
 	{\
 		if(context->reg == *reinterpret_cast<uint32_t*>(0x7FFE0260))\
 		{\
 			context->reg = 0x4A65;\
-			logman->Log("spoofed os version number at {:X}", address);\
+		}\
+		if(g_os_version_number_addresses_spoofed.find(address) == g_os_version_number_addresses_spoofed.end())\
+		{\
+			g_os_version_number_addresses_spoofed[address] = true;\
+			logman->Log("spoofed os version number {:X} ({}/{})", address, g_os_version_number_addresses_spoofed.size(), 64);\
 		}\
 	}))\
 {\
@@ -17,6 +24,16 @@ if(!hyprtrace::ExecutionTracer::AddExecutionBreakPoint(address, len, {}, [](hypr
 
 bool Aimware::SetupOSVersionSpoof()
 {
+	hyprutils::LogManager& logman = GetLogManager();
+	if (IsBadReadPtr(reinterpret_cast<const void*>(0x7FFE0260), sizeof(uint32_t)))
+	{
+		logman.Log("KUSER_SHARED_DATA memory region is invalid, trying to allocate...");
+		if (!VirtualAlloc(reinterpret_cast<void*>(0x7FFE0260), 0x1000, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE))
+		{
+			logman.Error("failed to allocate memory at 7FFE0260 for KUSER_SHARED_DATA");
+			return false;
+		}
+	}
 	SPOOF_OS_VER(0x00000011B7949D32, 0x4, R10);
 	SPOOF_OS_VER(0x00000011B8114A0E, 0x4, Rax);
 	SPOOF_OS_VER(0x00000011B807CD12, 0x7, Rdx);

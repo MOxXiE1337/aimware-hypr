@@ -1,7 +1,5 @@
 
 #include "aimware.h"
-#include "data/aimware_hdmp.h"
-#include "data/aimware_hseg.h"
 
 #include "zydis/Zydis.h"
 
@@ -25,7 +23,7 @@ bool Aimware::PrevMap()
 	hypr::RuntimeDump&     dump = GetRuntimeDump();
 	hypr::SegmentMapper&   mapper = GetSegmentMapper();
 
-	//AddVectoredExceptionHandler(0, ExceptionHandler);
+	AddVectoredExceptionHandler(0, ExceptionHandler);
 
 	cfg_path_ = std::wstring(_wgetenv(L"APPDATA")) + L"\\aimware\\cfg\\";
 
